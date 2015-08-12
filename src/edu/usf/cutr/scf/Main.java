@@ -16,7 +16,6 @@ public class Main {
 		
 		try {
 			String response = psr.postServiceRequestWithImage(useImage);
-//			String response = psr.postServiceRequest(false);
 			System.out.println("/////// RESPONSE //////////");
 			System.out.println(response);
 			System.out.println("///////////////////////////");
