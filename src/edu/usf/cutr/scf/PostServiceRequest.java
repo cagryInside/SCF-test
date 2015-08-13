@@ -4,9 +4,11 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.List;
 import java.util.Random;
 
 public class PostServiceRequest {
@@ -38,7 +40,7 @@ public class PostServiceRequest {
 
 		conn.setInstanceFollowRedirects(false);
 		conn.setRequestMethod("POST");
-		conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		conn.setRequestProperty("Content-Type", "multipart/form-data");
 		conn.setRequestProperty("charset", "UTF-8");
 		conn.setRequestProperty("Content-Length", "8bit");
 		conn.setUseCaches(false);
@@ -246,5 +248,47 @@ public class PostServiceRequest {
 		}
 
 		return response;
+	}
+
+	public String uploadFile() {
+
+		String charset = "UTF-8";
+		File uploadFile1 = new File("sonic.png");
+
+		Random rnd = new Random(System.currentTimeMillis());
+		int latRandom = rnd.nextInt(900) + 100;
+		int longRandom = rnd.nextInt(900) + 100;
+
+		try {
+			MultipartUtility multipart = new MultipartUtility(SCFConstants.URL, charset);
+
+//			multipart.addHeaderField("User-Agent", "CodeJava");
+//			multipart.addHeaderField("Test-Header", "Header-Value");
+
+			multipart.addFormField("api_key", "937033cad3054ec58a1a8156dcdd6ad8a416af2f");
+			multipart.addFormField("service_code", "989");
+			multipart.addFormField("service_name", "Pothole");
+			multipart.addFormField("lat", "27.8" + latRandom );
+			multipart.addFormField("long", "-82.7" + longRandom);
+			multipart.addFormField("address_string", "9389 Silverthorn Rd, Seminole, FL 33777.");
+			multipart.addFormField("description", "Auto test random#" + longRandom );
+			multipart.addFormField("first_name", "cagri");
+			multipart.addFormField("last_name", "usf");
+			multipart.addFormField("email", "c1-2-3-4-5@hotmail.com");
+			multipart.addFormField("device_id", "355458060771954");
+
+			multipart.addFilePart("media", uploadFile1);
+
+			List<String> response = multipart.finish();
+
+			System.out.println("SERVER REPLIED:");
+
+			for (String line : response) {
+				System.out.println(line);
+			}
+		} catch (IOException ex) {
+			System.err.println(ex);
+		}
+		return "";
 	}
 }
